@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |-
+    events { }
+
+    http {
+      upstream frontend {
+        server frontend-service:4001;
+      }
+
+      upstream backend {
+        server backend-service:4000;
+      }
+
+      upstream service {
+        server cat-service:4002;
+      }
+
+      server {
+        listen 80;
+
+        location / {
+            proxy_pass http://frontend;
+        }
+
+        location /api {
+            rewrite /api/(.*) /$1 break;
+            proxy_pass http://backend;
+        }
+
+        location /service {
+            proxy_pass http://service;
+        }
+      }
+    }
