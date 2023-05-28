@@ -1,6 +1,2 @@
 node_modules
-<<<<<<< HEAD
 docker-compose.yaml
-=======
-docker-compose.yaml
->>>>>>> ff9bbb1 (Kubernetes manifest)
