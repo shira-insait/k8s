@@ -1,0 +1,78 @@
+body {
+  background-color: #222;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#root {
+  width: 100%;
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+
+div#cat-container {
+  width: 30rem;
+  height: 30rem;
+  display: flex;
+  border-radius: 50%;
+  border: 0.2rem solid #9c27b0;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+button:focus,
+button:active,
+button:hover,
+button:focus-visible {
+  outline: none !important;
+}
+
+div#question {
+  font-size: 10rem;
+  color: #fff;
+}
+
+img#cat {
+  width: 30rem;
+  height: 30rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+h1 {
+  color: #fff;
+  font-size: 2rem;
+  text-align: center;
+  margin: 1rem 0 0;
+}
+
+div#all-cats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 2rem 2rem;
+}
+
+.cat-pic {
+  height: 100px;
+  width: 100px;
+  cursor: pointer;
+}
+
+card img {
+  object-fit: cover;
+}
