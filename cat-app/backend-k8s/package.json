@@ -5,12 +5,17 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "npx prisma generate && npx prisma migrate dev",
     "start": "npx nodemon --watch src src/index.ts  --ignore ./data/"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.0.0",
     "@types/body-parser": "^1.19.2",
     "axios": "^1.3.5",
     "axios-retry": "^3.4.0",
@@ -24,7 +29,7 @@
     "path": "^0.12.7",
     "pg": "^8.11.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.31.1"
+    "prisma": "^5.0.0"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.4",

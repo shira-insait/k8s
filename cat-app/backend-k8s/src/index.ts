@@ -4,7 +4,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import * as logger from 'npmlog';
 import axios from 'axios';
-import { CatPic, sequilize } from '../models';
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 dotenv.config();
 
@@ -18,8 +19,11 @@ app.use(bodyParser.json({ limit: '5mb' }));
 app.get('/cat', async (request: Request, response: Response) => {
   try {
     console.log('hhiii from /cat');
-    const { data } = await axios.get(`http://cat-service:4002/cat-pic`);
-    const newCatPic = await CatPic.create({ url: data });
+    // const { data } = await axios.get(`http://cat-service:4002/cat-pic`);
+    const res = await axios.get('https://api.thecatapi.com/v1/images/search');
+    const data = res.data[0].url;
+    const newCatPic = await prisma.catPic.create({data: {url: data}});
+    console.log(`Saved cat pic ${data}`)
     response.status(200).send({ newCatPic, meow: 'Meow' });
   } catch (error: any) {
     logger.error(error);
@@ -32,7 +36,8 @@ console.log('gooden morgen');
 app.get('/all-cats', async (request: Request, response: Response) => {
   try {
     console.log('hhiii from /all-cats');
-    const allCats = await CatPic.findAll();
+    const allCats = await prisma.catPic.findMany();
+    console.log(allCats);
     response.status(200).send({ allCats });
   } catch (error: any) {
     logger.error(error);
