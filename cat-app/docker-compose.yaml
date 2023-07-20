@@ -17,28 +17,40 @@ services:
       - db-data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+    expose:
+      - '5432'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  #############################
+  ############################
   # Backend Container
-  #############################
-  # backend-k8s:
-  #   env_file: './backend-k8s/.env'
-  #   restart: always
-  #   build: ./backend-k8s
-  #   image: shiragin/backend-k8s:latest
-  #   container_name: backend-k8s
-  #   depends_on:
-  #     - database-k8s
-  #   healthcheck:
-  #     test: wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1
-  #     interval: 30s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 150s
-  #   # ports:
-  #   #   - '4000:4000'
-  #   volumes:
-  #     - ./backend-k8s/data:/usr/src/app/data
+  ############################
+  backend-k8s:
+    env_file: './backend-k8s/.env'
+    restart: always
+    build: ./backend-k8s
+    image: shiragin/backend-k8s:latest
+    container_name: backend-k8s
+    depends_on:
+      database-k8s:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@database-k8s:5432/express_postgres_db?schema=public
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 150s
+    ports:
+      - '4000:4000'
+    expose:
+      - '4000'
+    volumes:
+      - ./backend-k8s/data:/usr/src/app/data
 
   # ##############################
   # # Cat Service Container
@@ -63,20 +75,24 @@ services:
   #   volumes:
   #     - ./cat-service-k8s/data:/usr/src/app/data
 
-  # ##############################
-  # # Frontend Container
-  # ##############################
-  # frontend-k8s:
-  #   env_file: './frontend-k8s/.env'
-  #   build: ./frontend-k8s
-  #   image: shiragin/frontend-k8s:latest
-  #   container_name: frontend-k8s
-  #   restart: always
-  #   # ports:
-  #   #   - '4001:4001'
-  #   depends_on:
-  #     backend-k8s:
-  #       condition: service_healthy
+  ##############################
+  # Frontend Container
+  ##############################
+  frontend-k8s:
+    env_file: './frontend-k8s/.env'
+    build: ./frontend-k8s
+    image: shiragin/frontend-k8s:latest
+    container_name: frontend-k8s
+    restart: always
+    ports:
+      - '4001:4001'
+    expose:
+      - '4001'
+    environment:
+      VITE_BACKEND_URL: http://localhost:4000
+    depends_on:
+      backend-k8s:
+        condition: service_healthy
 
   # ##############################
   # # Nginx Proxy Container
