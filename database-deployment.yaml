@@ -24,9 +24,9 @@ spec:
               value: express_postgres_db
           ports:
             - containerPort: 5432
-          volumeMounts:
-            - name: db-data
-              mountPath: /var/lib/postgresql/data
+          # volumeMounts:
+          #   - name: db-data
+          #     mountPath: /var/lib/postgresql/data
       volumes:
         - name: db-data
           persistentVolumeClaim:

@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prestart": "npx prisma generate && npx prisma migrate dev",
-    "start": "npx nodemon --watch src src/index.ts  --ignore ./data/"
+    "start": "npx nodemon --watch src src/index.ts  --ignore ./data/",
+    "preprod": "npx prisma generate && npx prisma migrate deploy",
+    "prod": "npx nodemon --watch src src/index.ts  --ignore ./data/"
   },
   "prisma": {
     "schema": "prisma/schema.prisma"
