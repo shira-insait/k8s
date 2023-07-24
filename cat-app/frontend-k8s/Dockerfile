@@ -13,6 +13,4 @@ RUN npm ci
 
 COPY . .
 
-ENV BACKEND_URL=backend-k8s
-
 CMD ["npm", "start"]

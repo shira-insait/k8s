@@ -10,11 +10,9 @@ function App() {
   const [allCats, setAllCats] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  axios.defaults.baseURL = BACKEND_URL;
-
   useEffect(() => {
     async function getAllCats() {
-      const response = await axios.get(`/all-cats`);
+      const response = await axios.get(`${BACKEND_URL}/all-cats`);
       setAllCats(response.data.allCats);
     }
     getAllCats();
@@ -32,7 +30,7 @@ function App() {
         }
       }
       setCatPic('');
-      const response = await axios.get(`/cat`);
+      const response = await axios.get(`${BACKEND_URL}/cat`);
       setMeow(response.data.meow);
       setCatPic(response.data.newCatPic);
     } catch (error) {

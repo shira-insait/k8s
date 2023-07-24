@@ -29,10 +29,8 @@ services:
   # Backend Container
   ############################
   backend-k8s:
-    env_file: './backend-k8s/.env'
     restart: always
     build: ./backend-k8s
-    image: shiragin/backend-k8s:latest
     container_name: backend-k8s
     depends_on:
       database-k8s:
@@ -40,7 +38,7 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:postgres@database-k8s:5432/express_postgres_db?schema=public
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1
+      test: wget --no-verbose --tries=1 --spider backend-k8s:4000/health || exit 1
       interval: 30s
       timeout: 5s
       retries: 5
@@ -52,36 +50,11 @@ services:
     volumes:
       - ./backend-k8s/data:/usr/src/app/data
 
-  # ##############################
-  # # Cat Service Container
-  # ##############################
-  # cat-service-k8s:
-  #   env_file: './cat-service-k8s/.env'
-  #   restart: always
-  #   build: ./cat-service-k8s
-  #   image: shiragin/cat-service-k8s:latest
-  #   container_name: cat-service-k8s
-  #   healthcheck:
-  #     test: wget --no-verbose --tries=1 --spider http://localhost:4002/health || exit 1
-  #     interval: 30s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 150s
-  #   # ports:
-  #   #   - '4002:4002'
-  #   depends_on:
-  #     backend-k8s:
-  #       condition: service_healthy
-  #   volumes:
-  #     - ./cat-service-k8s/data:/usr/src/app/data
-
   ##############################
   # Frontend Container
   ##############################
   frontend-k8s:
-    env_file: './frontend-k8s/.env'
     build: ./frontend-k8s
-    image: shiragin/frontend-k8s:latest
     container_name: frontend-k8s
     restart: always
     ports:
@@ -93,18 +66,3 @@ services:
     depends_on:
       backend-k8s:
         condition: service_healthy
-
-  # ##############################
-  # # Nginx Proxy Container
-  # ##############################
-  # nginx:
-  #   image: nginx:stable
-  #   container_name: nginx-k8s
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
-  #   ports:
-  #     - '80:80'
-  #   depends_on:
-  #     - backend-k8s
-  #     - cat-service-k8s
-  #     - frontend-k8s

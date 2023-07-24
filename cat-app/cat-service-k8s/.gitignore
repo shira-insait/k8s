@@ -1,6 +1,0 @@
-.env
-dist
-node_modules
-src/report_service/report/img
-src/report_service/report/*.pdf
-src/report_service/report/*.pptx

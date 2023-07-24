@@ -14,23 +14,17 @@ spec:
     spec:
       containers:
         - name: backend
-          image: chrome99/backend
+          image: chrome99/kube-backend:1.0
           env:
-            - name: POSTGRES_USER
-              value: postgres
-            - name: POSTGRES_PASSWORD
-              value: postgres
-            - name: POSTGRES_DB
-              value: express_postgres_db
             - name: DATABASE_URL
-              value: postgresql://postgres:postgres@10.0.130.21:5432/express_postgres_db?schema=public
+              value: postgresql://postgres:postgres@database-service:5432/express_postgres_db?schema=public
           imagePullPolicy: Always
           ports:
             - containerPort: 4000
       initContainers:
         - name: prisma-migrate
-          image: chrome99/backend
+          image: chrome99/kube-backend:1.0
           command: ["npx", "prisma", "migrate", "deploy"]
           env:
             - name: DATABASE_URL
-              value: postgresql://postgres:postgres@10.0.130.21:5432/express_postgres_db?schema=public
+              value: postgresql://postgres:postgres@database-service:5432/express_postgres_db?schema=public

@@ -14,6 +14,9 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: chrome99/frontend
+          image: chrome99/kube-frontend:1.0
+          env:
+            - name: VITE_BACKEND_URL
+              value: /api/
           ports:
             - containerPort: 4001

@@ -15,10 +15,6 @@ data:
         server backend-service:4000;
       }
 
-      upstream service {
-        server cat-service:4002;
-      }
-
       server {
         listen 80;
 
@@ -29,10 +25,6 @@ data:
         location /api {
             rewrite /api/(.*) /$1 break;
             proxy_pass http://backend;
-        }
-
-        location /service {
-            proxy_pass http://service;
         }
       }
     }
