@@ -13,13 +13,14 @@ const app: Express = express();
 const PORT = 4000;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 app.use(bodyParser.json({ limit: '5mb' }));
 
 app.get('/cat', async (request: Request, response: Response) => {
   try {
     console.log('hhiii from /cat');
-    // const { data } = await axios.get(`http://cat-service:4002/cat-pic`);
     const res = await axios.get('https://api.thecatapi.com/v1/images/search');
     const data = res.data[0].url;
     const newCatPic = await prisma.catPic.create({data: {url: data}});

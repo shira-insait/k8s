@@ -13,4 +13,5 @@ datasource db {
 model CatPic {
   id    Int    @id @default(autoincrement())
   url  String
+  username  String  @default("fred")
 }
