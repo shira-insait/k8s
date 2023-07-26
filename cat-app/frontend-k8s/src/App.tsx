@@ -64,6 +64,7 @@ function App() {
         {allCats.length > 0 &&
           allCats.map((cat) => (
             <Card
+              key={cat.id}
               className="cat-pic"
               onClick={() => {
                 setCatPic(cat);
