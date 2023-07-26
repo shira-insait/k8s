@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+  ############################
+  # Backend Container
+  ############################
+  backend-k8s:
+    restart: always
+    build: ./py-backend-k8s
+    container_name: py-backend-k8s
+    environment:
+      SNOWFLAKE_USER: insait
+      SNOWFLAKE_PASSWORD: Insait123
+      SNOWFLAKE_ACCOUNT: or10868.uae-north.azure
+      SNOWFLAKE_DATABASE: HW_DB
+      SNOWFLAKE_SCHEMA: PUBLIC
+      SNOWFLAKE_WAREHOUSE: COMPUTE_WH
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider backend-k8s:4000/health || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 150s
+    ports:
+      - '4000:4000'
+    expose:
+      - '4000'
+    volumes:
+      - ./backend-k8s/data:/usr/src/app/data
+
+  ##############################
+  # Frontend Container
+  ##############################
+  frontend-k8s:
+    build: ./frontend-k8s
+    container_name: frontend-k8s
+    restart: always
+    ports:
+      - '4001:4001'
+    expose:
+      - '4001'
+    environment:
+      VITE_BACKEND_URL: http://localhost:4000
+    depends_on:
+      backend-k8s:
+        condition: service_healthy
