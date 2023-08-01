@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: syanay/cat-app-backend:1.1
+          env:
+            - name: SNOWFLAKE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: snowflake-secrets
+                  key: password
+            - name: SNOWFLAKE_SCHEMA
+              value: PUBLIC
+            - name: SNOWFLAKE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: snowflake-secrets
+                  key: user
+            - name: SNOWFLAKE_ACCOUNT
+              value: or10868.uae-north.azure
+            - name: SNOWFLAKE_DATABASE
+              value: HW_DB
+            - name: SNOWFLAKE_WAREHOUSE
+              value: COMPUTE_WH
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4000
+      initContainers:
+         - name: alembic-migrate
+           image: syanay/cat-app-backend:1.1
+           command: ["alembic", "upgrade", "head"]
+           env:
+            - name: SNOWFLAKE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: snowflake-secrets
+                  key: password
+            - name: SNOWFLAKE_SCHEMA
+              value: PUBLIC
+            - name: SNOWFLAKE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: snowflake-secrets
+                  key: user
+            - name: SNOWFLAKE_ACCOUNT
+              value: or10868.uae-north.azure
+            - name: SNOWFLAKE_DATABASE
+              value: HW_DB
+            - name: SNOWFLAKE_WAREHOUSE
+              value: COMPUTE_WH

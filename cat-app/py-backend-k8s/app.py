@@ -29,12 +29,14 @@ def get_cat():
         res = requests.get('https://api.thecatapi.com/v1/images/search')
         data = res.json()[0]['url']
         
-        session = Session()
-        new_cat_pic = CatPic(url=data)  
-        session.add(new_cat_pic)
-        session.commit()
+        with Session() as session:
+            new_cat_pic = CatPic(url=data)  
+            session.add(new_cat_pic)
+            session.flush()
+            new_cat_pic_id = new_cat_pic.id
+            session.commit()
 
-        return jsonify({'newCatPic': {'id': new_cat_pic.id, 'url': data}, 'meow': 'Meow'}), 200
+        return jsonify({'newCatPic': {'id': new_cat_pic_id, 'url': data}, 'meow': 'Meow'}), 200
     except Exception as e:
         logging.error(e)
         return jsonify({'message': str(e)}), 400
@@ -42,8 +44,9 @@ def get_cat():
 @app.route('/all-cats', methods=['GET'])
 def get_all_cats():
     try:
-        session = Session()
-        all_cats = session.query(CatPic).all()  
+        with Session() as session:
+            all_cats = session.query(CatPic).all()
+
         return jsonify({'allCats': [{'id': cat.id, 'url': cat.url} for cat in all_cats]}), 200
     except Exception as e:
         logging.error(e)

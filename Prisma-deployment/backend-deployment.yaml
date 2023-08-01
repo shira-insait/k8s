@@ -17,7 +17,7 @@ spec:
           image: chrome99/kube-backend:1.0
           env:
             - name: DATABASE_URL
-              value: postgresql://postgres:postgres@10.0.130.21:5432/express_postgres_db?schema=public
+              value: postgresql://postgres:postgres@database-service:5432/express_postgres_db?schema=public
           imagePullPolicy: Always
           ports:
             - containerPort: 4000
@@ -27,4 +27,4 @@ spec:
           command: ["npx", "prisma", "migrate", "deploy"]
           env:
             - name: DATABASE_URL
-              value: postgresql://postgres:postgres@10.0.130.21:5432/express_postgres_db?schema=public
+              value: postgresql://postgres:postgres@database-service:5432/express_postgres_db?schema=public

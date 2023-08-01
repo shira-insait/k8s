@@ -23,7 +23,6 @@ def upgrade() -> None:
     op.create_table('catpic',
     sa.Column('id', sa.Integer(), server_default=text("id_seq.nextval"), nullable=False),
     sa.Column('url', sa.String(), nullable=True),
-    sa.Column('username', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     schema='PUBLIC'
     )

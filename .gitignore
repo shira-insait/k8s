@@ -1,1 +1,5 @@
 node_modules
+cat-app/py-backend-k8s/env/
+cat-app/py-backend-k8s/__pycache__/
+cat-app/py-backend-k8s/alembic/__pycache__/
+cat-app/py-backend-k8s/alembic/versions/__pycache__/
