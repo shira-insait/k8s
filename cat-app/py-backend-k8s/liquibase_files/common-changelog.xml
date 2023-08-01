@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="yanay (generated)" id="1690893911189-1">
+        <createSequence incrementBy="1" sequenceName="ID_SEQ" startValue="1"/>
+    </changeSet>
+    <changeSet author="yanay (generated)" id="1690893911189-2">
+        <createTable tableName="ALEMBIC_VERSION">
+            <column name="VERSION_NUM" type="VARCHAR(32)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ALEMBIC_VERSION_PKC"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanay (generated)" id="1690893911189-3">
+        <createTable tableName="CATPIC">
+            <column autoIncrement="true" name="ID" type="NUMBER(38)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_CONSTRAINT_c1c4e4a7-81fc-4556-8bb2-3cfe8a4c8ee9"/>
+            </column>
+            <column name="URL" type="VARCHAR(16777216)"/>
+            <column defaultValueBoolean="false" name="ADOPTED" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanay" id="010820231641">
+        <dropTable tableName="ALEMBIC_VERSION"/>
+    </changeSet>
+</databaseChangeLog>

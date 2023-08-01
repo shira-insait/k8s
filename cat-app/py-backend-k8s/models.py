@@ -15,4 +15,3 @@ class CatPic(Base):
     id = Column(Integer, Sequence('id_seq'), primary_key=True)
     url = Column(String)
     adopted = Column(Boolean, default=False, nullable=False)
-    color = Column(String, default='colorful')
