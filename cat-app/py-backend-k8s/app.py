@@ -13,14 +13,27 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-password = os.getenv('SNOWFLAKE_PASSWORD')
-schema = os.getenv('SNOWFLAKE_SCHEMA')
-user = os.getenv('SNOWFLAKE_USER')
-account = os.getenv('SNOWFLAKE_ACCOUNT')
-database = os.getenv('SNOWFLAKE_DATABASE')
-warehouse = os.getenv('SNOWFLAKE_WAREHOUSE')
+db_type = os.getenv('DB_TYPE')
 
-engine = create_engine(f'snowflake://{user}:{password}@{account}/{database}/{schema}?warehouse={warehouse}', echo=True)
+if db_type == 'snowflake':
+    password = os.getenv('SNOWFLAKE_PASSWORD')
+    schema = os.getenv('SNOWFLAKE_SCHEMA')
+    user = os.getenv('SNOWFLAKE_USER')
+    account = os.getenv('SNOWFLAKE_ACCOUNT')
+    database = os.getenv('SNOWFLAKE_DATABASE')
+    warehouse = os.getenv('SNOWFLAKE_WAREHOUSE')
+    engine = create_engine(f'snowflake://{user}:{password}@{account}/{database}/{schema}?warehouse={warehouse}', echo=True)
+elif db_type == 'pg':
+    pg_password = os.getenv('POSTGRES_PASSWORD')
+    pg_user = os.getenv('POSTGRES_USER')
+    pg_host = os.getenv('POSTGRES_HOST')
+    pg_port = os.getenv('POSTGRES_PORT')
+    pg_database = os.getenv('POSTGRES_DATABASE')
+    pg_schema = os.getenv('POSTGRES_SCHEMA')
+    engine = create_engine(f'postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}?schema={pg_schema}', echo=True)
+else:
+    raise ValueError('Invalid DB_TYPE')
+    
 Session = sessionmaker(bind=engine)
 
 @app.route('/cat', methods=['GET'])

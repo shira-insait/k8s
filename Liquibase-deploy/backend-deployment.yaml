@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: syanay/cat-app-backend-lb
+          env:
+           - name: DB_TYPE
+             value: snowflake
+           - name: SNOWFLAKE_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: snowflake-secrets
+                 key: password
+           - name: SNOWFLAKE_SCHEMA
+             value: PUBLIC
+           - name: SNOWFLAKE_USER
+             valueFrom:
+               secretKeyRef:
+                 name: snowflake-secrets
+                 key: user
+           - name: SNOWFLAKE_ACCOUNT
+             value: or10868.uae-north.azure
+           - name: SNOWFLAKE_DATABASE
+             value: HW_DB
+           - name: SNOWFLAKE_WAREHOUSE
+             value: COMPUTE_WH
+           - name: POSTGRES_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: postgres-secrets
+                 key: password
+           - name: POSTGRES_USER
+             valueFrom:
+               secretKeyRef:
+                 name: postgres-secrets
+                 key: user
+           - name: POSTGRES_HOST
+             value: localhost
+           - name: POSTGRES_PORT
+             value: "5432"
+           - name: POSTGRES_DATABASE
+             value: express_postgres_db
+           - name: POSTGRES_SCHEMA
+             value: public
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4000
+      initContainers:
+         - name: liquibase-update
+           image: syanay/cat-app-backend-lb
+           command: ["/bin/sh", "-c", "cd /app/liquibase_files/ && ./liquibase --defaultsFile=${DB_TYPE}.properties update"]
+           env:
+            - name: DB_TYPE
+              value: snowflake
+            - name: SNOWFLAKE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: snowflake-secrets
+                  key: password
+            - name: SNOWFLAKE_SCHEMA
+              value: PUBLIC
+            - name: SNOWFLAKE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: snowflake-secrets
+                  key: user
+            - name: SNOWFLAKE_ACCOUNT
+              value: or10868.uae-north.azure
+            - name: SNOWFLAKE_DATABASE
+              value: HW_DB
+            - name: SNOWFLAKE_WAREHOUSE
+              value: COMPUTE_WH
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: password
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: user
+            - name: POSTGRES_HOST
+              value: localhost
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DATABASE
+              value: express_postgres_db
+            - name: POSTGRES_SCHEMA
+              value: public

@@ -24,4 +24,7 @@
     <changeSet author="yanay" id="010820231641">
         <dropTable tableName="ALEMBIC_VERSION"/>
     </changeSet>
+    <changeSet author="yanay" id="020820231319">
+        <renameColumn oldColumnName="ADOPTED" newColumnName="IS_ADOPTED" tableName="CATPIC"/>
+    </changeSet>
 </databaseChangeLog>

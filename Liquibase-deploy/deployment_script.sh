@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Define the yaml files
-declare -a files=("secrets.yaml" 
+declare -a files=("secrets.yaml"
+                  "database-deployment.yaml"
+                  "database-service.yaml"
                   "backend-deployment.yaml" 
                   "backend-service.yaml" 
                   "frontend-deployment.yaml" 
